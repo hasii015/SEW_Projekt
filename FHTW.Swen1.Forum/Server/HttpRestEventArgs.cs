@@ -2,11 +2,19 @@
 using System.Text;
 using System.Text.Json.Nodes;
 
+
+
 namespace FHTW.Swen1.Forum.Server;
 
-
+/// <summary>This class defines event arguments for the <see cref="HttpRestServer.RequestReceived"/> event.</summary>
 public class HttpRestEventArgs: EventArgs
 {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // constructors                                                                                                     //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Creates a new instance of this class.</summary>
+    /// <param name="context">HTTP listener context.</param>
     public HttpRestEventArgs(HttpListenerContext context)
     {
         Context = context;
@@ -35,22 +43,46 @@ public class HttpRestEventArgs: EventArgs
     }
 
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public properties                                                                                                //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Gets the underlying HTTP listener context object.</summary>
     public HttpListenerContext Context { get; }
 
+
+    /// <summary>Gets the HTTP method for the request.</summary>
     public HttpMethod Method { get; }
 
+
+    /// <summary>Gets the path for the request.</summary>
     public string Path { get; }
 
+
+    /// <summary>Gets the request body.</summary>
     public string Body { get; }
 
+
+    /// <summary>Gets the request JSON content.</summary>
     public JsonObject Content { get; }
 
+
+    /// <summary>Gets or sets if the request has been responded to.</summary>
     public bool Responded
     {
         get; set;
     } = false;
 
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public methods                                                                                                   //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Sends a response to the request.</summary>
+    /// <param name="statusCode">HTTP status code.</param>
+    /// <param name="content">Response message JSON content.</param>
     public void Respond(int statusCode, JsonObject? content)
     {
         HttpListenerResponse response = Context.Response;

@@ -1,12 +1,26 @@
 ﻿using System.Net;
 
+
+
 namespace FHTW.Swen1.Forum.Server;
 
 public sealed class HttpRestServer: IDisposable
 {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // private members                                                                                                  //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>HTTP listener object.</summary>
     private readonly HttpListener _Listener;
 
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // constructors                                                                                                     //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Creates a new instance of this class.</summary>
+    /// <param name="port">Port number for the server.</param>
     public HttpRestServer(int port = 12000)
     {
         _Listener = new();
@@ -14,22 +28,33 @@ public sealed class HttpRestServer: IDisposable
     }
 
 
-    public event EventHandler<HttpRestEventArgs> RequestReceived;
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public events                                                                                                    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>The event is raised when a request has been received.</summary>
+    public event EventHandler<HttpRestEventArgs>? RequestReceived;
 
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public properties                                                                                                //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Gets a value indicating if the server is running.</summary>
     public bool Running
     {
         get; private set;
     }
 
 
-    public void Stop()
-    {
-        _Listener.Close();
-        Running = false;
-    }
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public methods                                                                                                   //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Starts an runs the server.</summary>
     public void Run()
     {
         if(Running) return;
@@ -55,8 +80,23 @@ public sealed class HttpRestServer: IDisposable
     }
 
 
+    /// <summary>Stops the server.</summary>
+    public void Stop()
+    {
+        _Listener.Close();
+        Running = false;
+    }
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // [interface] IDisposable                                                                                          //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// <summary>Disposes the object and releases used resources.</summary>
+    /// <exception cref="NotImplementedException"></exception>
     public void Dispose()
     {
-        throw new NotImplementedException();
+        ((IDisposable) _Listener).Dispose();
     }
 }
