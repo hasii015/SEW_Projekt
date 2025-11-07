@@ -80,6 +80,12 @@ public class HttpRestEventArgs: EventArgs
     // public methods                                                                                                   //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    public void Respond(HttpStatusCode statusCode, JsonObject? content)
+    {
+        Respond((int) statusCode, content);
+    }
+
+
     /// <summary>Sends a response to the request.</summary>
     /// <param name="statusCode">HTTP status code.</param>
     /// <param name="content">Response message JSON content.</param>
