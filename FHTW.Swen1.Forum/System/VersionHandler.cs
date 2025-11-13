@@ -37,8 +37,8 @@ public sealed class VersionHandler: Handler, IHandler
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"[{nameof(VersionHandler)} Invalid session endpoint.");
             }
-        }
 
-        e.Responded = true;
+            e.Responded = true;
+        }
     }
 }
