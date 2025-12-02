@@ -24,7 +24,7 @@ public sealed class HttpRestServer: IDisposable
     public HttpRestServer(int port = 12000)
     {
         _Listener = new();
-        _Listener.Prefixes.Add($"http://+:{port}/");
+        _Listener.Prefixes.Add($"http://localhost:{port}/");
     }
 
 

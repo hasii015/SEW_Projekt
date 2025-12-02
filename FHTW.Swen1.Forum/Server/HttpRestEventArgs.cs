@@ -75,18 +75,32 @@ public class HttpRestEventArgs: EventArgs
     {
         get
         {
-            string token = Context.Request.Headers["Authorization"] ?? string.Empty;
-            if(token.ToLower().StartsWith("bearer "))
+            string raw = Context.Request.Headers["Authorization"] ?? string.Empty;
+            Console.WriteLine($"[Auth] Authorization header raw: '{raw}'");
+
+            string token = raw;
+            if (token.ToLower().StartsWith("bearer "))
             {
                 token = token[7..].Trim();
+                Console.WriteLine($"[Auth] Parsed token: '{token}'");
             }
-            else { return null; }
+            else
+            {
+                Console.WriteLine("[Auth] Header did not start with 'Bearer '");
+                return null;
+            }
 
-            return Session.Get(token);
+            var session = Session.Get(token);
+            Console.WriteLine(session is null
+                ? "[Auth] No session found for this token"
+                : "[Auth] Session found");
+
+            return session;
         }
     }
 
-    
+
+
     /// <summary>Gets or sets if the request has been responded to.</summary>
     public bool Responded
     {

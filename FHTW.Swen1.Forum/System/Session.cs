@@ -78,15 +78,23 @@ public sealed class Session
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // public static methods                                                                                            //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     /// <summary>Creates a new session.</summary>
     /// <param name="userName">User name.</param>
     /// <param name="password">Password.</param>
     /// <returns>Returns a session instance, or NULL if user couldn't be logged in.</returns>
     public static Session? Create(string userName, string password)
     {
-        return new Session(userName, password);
+        var session = new Session(userName, password);
+
+        lock (_Sessions)
+        {
+            _Sessions[session.Token] = session;
+        }
+
+        return session;
     }
+
 
 
     /// <summary>Gets a session by its token.</summary>
