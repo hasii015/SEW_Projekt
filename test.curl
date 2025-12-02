@@ -7,3 +7,41 @@ curl -i -X POST http://localhost:12000/users --header "Content-Type: application
 rem logon as admin/user
 curl -i -X POST http://localhost:12000/sessions --header "Content-Type: application/json" -d "{\"username\":\"admin\", \"password\":\"admin\"}"
 curl -i -X POST http://localhost:12000/sessions --header "Content-Type: application/json" -d "{\"username\":\"batman\", \"password\":\"batcave\"}"
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--- User Registration – POST /users --->
+
+curl -X POST "http://localhost:12000/users" -H "Content-Type: application/json" -d "{\"username\":\"alice\",\"fullname\":\"Alice\",\"email\":\"alice@example.com\",\"password\":\"secret\"}"
+
+
+<!--- Login – POST /sessions --->
+curl -X POST "http://localhost:12000/sessions" -H "Content-Type: application/json" -d "{\"username\":\"alice\",\"password\":\"secret\"}"
+
+<!--- (Auth Proof) Access Media Without Token – must fail --->
+curl -X GET "http://localhost:12000/media"
+
+
+<!--- List All Media – GET /media --->
+curl -X GET "http://localhost:12000/media" -H "Authorization: Bearer TOKEN"
+
+<!--- Create Media – POST /media --->
+curl -X POST "http://localhost:12000/media" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"title\":\"Interstellar\",\"description\":\"Interstellar Description\",\"mediatype\":\"movie\",\"releaseYear\":2014,\"genres\":\"Sci-Fi, Action\",\"ageRestriction\":16}"
+
+<!--- List Media Again (Creation Worked) --->
+curl -X GET "http://localhost:12000/media" -H "Authorization: Bearer TOKEN"
+
+<!--- Get Media by ID – GET /media/{id} --->
+curl -X GET "http://localhost:12000/media/2" -H "Authorization: Bearer TOKEN"
+
+<!--- (Error) Get Non-Existing Media --->
+curl -X GET "http://localhost:12000/media/3" -H "Authorization: Bearer TOKEN"
+
+<!--- Update Media – PUT /media/{id} --->
+curl -X PUT "http://localhost:12000/media/2" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"title\":\"Interstellar (Edit)\",\"description\":\"Edited description\"}"
+
+<!--- Delete Media – DELETE /media/{id} --->
+curl -X DELETE "http://localhost:12000/media/2" -H "Authorization: Bearer TOKEN"
+
+
+
