@@ -6,17 +6,14 @@
 public sealed class Rating
 {
     public int Id { get; set; }
-
     public int MediaId { get; set; }
+    public string CreatedBy { get; set; } = "";
 
-    public string UserName { get; set; } = string.Empty;
+    public int Stars { get; set; }              // 1–5 (Postman calls it "stars")
+    public string Comment { get; set; } = "";   // optional
+    public DateTime Timestamp { get; set; }     // required by spec
 
-    public int Stars { get; set; }
+    public bool IsConfirmed { get; set; } = false;
 
-    public string Comment { get; set; } = string.Empty;
-
-    public DateTime CreatedAt { get; set; }
-
-    public bool IsConfirmed { get; set; } = true;  
-    public int Likes { get; set; } = 0;
+    public HashSet<string> LikedBy { get; set; } = new();
 }

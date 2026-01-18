@@ -85,6 +85,10 @@ public sealed class Session
     /// <returns>Returns a session instance, or NULL if user couldn't be logged in.</returns>
     public static Session? Create(string userName, string password)
     {
+        // Only login if credentials are correct
+        if (!UserStore.VerifyCredentials(userName, password))
+            return null;
+
         var session = new Session(userName, password);
 
         lock (_Sessions)
@@ -94,6 +98,7 @@ public sealed class Session
 
         return session;
     }
+
 
 
 

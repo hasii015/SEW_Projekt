@@ -1,0 +1,120 @@
+# =========================
+# MRP API TESTS (PowerShell)
+# Port: 12000
+# =========================
+
+$base="http://localhost:12000"
+
+# -------------------------
+# 1) REGISTER 3 USERS
+# -------------------------
+Invoke-RestMethod -Method POST -Uri "$base/api/users/register" -ContentType "application/json" -Body (@{username="user1";password="pass123"} | ConvertTo-Json)
+Invoke-RestMethod -Method POST -Uri "$base/api/users/register" -ContentType "application/json" -Body (@{username="user2";password="pass123"} | ConvertTo-Json)
+Invoke-RestMethod -Method POST -Uri "$base/api/users/register" -ContentType "application/json" -Body (@{username="user3";password="pass123"} | ConvertTo-Json)
+
+# -------------------------
+# 2) LOGIN + STORE TOKENS
+# -------------------------
+$token1=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user1";password="pass123"} | ConvertTo-Json)).token
+$token2=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user2";password="pass123"} | ConvertTo-Json)).token
+$token3=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user3";password="pass123"} | ConvertTo-Json)).token
+
+$h1=@{Authorization="Bearer $token1"}
+$h2=@{Authorization="Bearer $token2"}
+$h3=@{Authorization="Bearer $token3"}
+
+# -------------------------
+# 3) UPDATE PROFILE (USER1)
+# -------------------------
+Invoke-RestMethod -Method PUT -Uri "$base/api/users/1/profile" -Headers $h1 -ContentType "application/json" -Body (@{email="user1@example.com";favoriteGenre="sci-fi"} | ConvertTo-Json)
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/profile" -Headers $h1
+
+# -------------------------
+# 4) CREATE 5 MEDIA ENTRIES (USER1)
+# -------------------------
+$m1=(Invoke-RestMethod -Method POST -Uri "$base/api/media" -Headers $h1 -ContentType "application/json" -Body (@{title="Inception";description="Dream heist";mediaType="movie";releaseYear=2010;genres=@("sci-fi","thriller");ageRestriction=12} | ConvertTo-Json -Depth 5)).id
+$m2=(Invoke-RestMethod -Method POST -Uri "$base/api/media" -Headers $h1 -ContentType "application/json" -Body (@{title="Interstellar";description="Space + time";mediaType="movie";releaseYear=2014;genres=@("sci-fi","drama");ageRestriction=12} | ConvertTo-Json -Depth 5)).id
+$m3=(Invoke-RestMethod -Method POST -Uri "$base/api/media" -Headers $h1 -ContentType "application/json" -Body (@{title="The Matrix";description="Reality is fake";mediaType="movie";releaseYear=1999;genres=@("sci-fi","action");ageRestriction=16} | ConvertTo-Json -Depth 5)).id
+$m4=(Invoke-RestMethod -Method POST -Uri "$base/api/media" -Headers $h1 -ContentType "application/json" -Body (@{title="Spirited Away";description="Ghibli classic";mediaType="movie";releaseYear=2001;genres=@("fantasy","adventure");ageRestriction=6} | ConvertTo-Json -Depth 5)).id
+$m5=(Invoke-RestMethod -Method POST -Uri "$base/api/media" -Headers $h1 -ContentType "application/json" -Body (@{title="Breaking Bad";description="Chemistry teacher crime";mediaType="series";releaseYear=2008;genres=@("crime","drama");ageRestriction=16} | ConvertTo-Json -Depth 5)).id
+
+# Check list all
+Invoke-RestMethod -Method GET -Uri "$base/api/media" -Headers $h1
+
+# Check get by id
+Invoke-RestMethod -Method GET -Uri "$base/api/media/$m1" -Headers $h1
+
+# -------------------------
+# 5) QUERY SUPPORT (FILTER/SORT)
+# -------------------------
+Invoke-RestMethod -Method GET -Uri "$base/api/media?title=incep" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media?genre=sci-fi" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media?mediaType=movie" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media?releaseYear=2010" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media?ageRestriction=12" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media?genre=sci-fi&sortBy=title" -Headers $h1
+
+# -------------------------
+# 6) RATE MEDIA (MULTI USERS)
+# -------------------------
+$r1=(Invoke-RestMethod -Method POST -Uri "$base/api/media/$m1/rate" -Headers $h1 -ContentType "application/json" -Body (@{stars=5;comment="Peak sci-fi."} | ConvertTo-Json)).id
+$r2=(Invoke-RestMethod -Method POST -Uri "$base/api/media/$m1/rate" -Headers $h2 -ContentType "application/json" -Body (@{stars=4;comment="Really good."} | ConvertTo-Json)).id
+$r3=(Invoke-RestMethod -Method POST -Uri "$base/api/media/$m2/rate" -Headers $h3 -ContentType "application/json" -Body (@{stars=5;comment="Masterpiece."} | ConvertTo-Json)).id
+
+# -------------------------
+# 7) CONFIRM RATING COMMENTS
+# -------------------------
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r1/confirm" -Headers $h1
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r2/confirm" -Headers $h2
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r3/confirm" -Headers $h3
+
+# -------------------------
+# 8) LIKE RATINGS (CROSS USER)
+# -------------------------
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r1/like" -Headers $h2
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r1/like" -Headers $h3
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r2/like" -Headers $h1
+
+# -------------------------
+# 9) UPDATE RATING (USER2 UPDATES OWN RATING)
+# -------------------------
+Invoke-RestMethod -Method PUT -Uri "$base/api/ratings/$r2" -Headers $h2 -ContentType "application/json" -Body (@{stars=3;comment="Changed my mind slightly."} | ConvertTo-Json)
+Invoke-RestMethod -Method POST -Uri "$base/api/ratings/$r2/confirm" -Headers $h2
+
+# -------------------------
+# 10) FAVORITES (USER1 + USER2)
+# -------------------------
+Invoke-RestMethod -Method POST -Uri "$base/api/media/$m1/favorite" -Headers $h1
+Invoke-RestMethod -Method POST -Uri "$base/api/media/$m2/favorite" -Headers $h1
+Invoke-RestMethod -Method POST -Uri "$base/api/media/$m3/favorite" -Headers $h2
+
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/favorites" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/users/2/favorites" -Headers $h2
+
+Invoke-RestMethod -Method DELETE -Uri "$base/api/media/$m2/favorite" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/favorites" -Headers $h1
+
+# -------------------------
+# 11) USER RATING HISTORY
+# -------------------------
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/ratings" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/users/2/ratings" -Headers $h2
+Invoke-RestMethod -Method GET -Uri "$base/api/users/3/ratings" -Headers $h3
+
+# -------------------------
+# 12) RECOMMENDATIONS
+# -------------------------
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/recommendations?type=genre" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/users/1/recommendations?type=content" -Headers $h1
+
+# -------------------------
+# 13) LEADERBOARD
+# -------------------------
+Invoke-RestMethod -Method GET -Uri "$base/api/leaderboard" -Headers $h1
+
+# -------------------------
+# 14) MEDIA UPDATE + DELETE PERMISSIONS CHECK (OPTIONAL)
+# -------------------------
+Invoke-RestMethod -Method PUT -Uri "$base/api/media/$m4" -Headers $h1 -ContentType "application/json" -Body (@{title="Spirited Away (Edited)"} | ConvertTo-Json)
+Invoke-RestMethod -Method DELETE -Uri "$base/api/media/$m5" -Headers $h1
+Invoke-RestMethod -Method GET -Uri "$base/api/media" -Headers $h1
