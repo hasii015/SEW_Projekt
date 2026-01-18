@@ -10,19 +10,14 @@ public sealed class RecommendationHandler : Handler, IHandler
 {
     public override void Handle(HttpRestEventArgs e)
     {
-        // SPEC: GET /api/users/{id}/recommendations?type=genre|content
-
-        // Only care about /api/users/... paths
         if (!e.Path.StartsWith("/api/users/"))
             return;
 
         var s = e.Path.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries);
 
-        // Only care about: /api/users/{id}/recommendations
         if (!(s.Length == 4 && s[0] == "api" && s[1] == "users" && s[3] == "recommendations"))
             return;
 
-        // Now we are 100% sure it's recommendations -> NOW require auth
         var session = e.Session;
         if (session is null)
         {
@@ -40,7 +35,6 @@ public sealed class RecommendationHandler : Handler, IHandler
             return;
         }
 
-        // Query param: ?type=genre or ?type=content
         string type = e.Context.Request.QueryString["type"] ?? string.Empty;
         type = type.Trim().ToLowerInvariant();
 

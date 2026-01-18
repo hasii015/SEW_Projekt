@@ -17,7 +17,6 @@ public sealed class User : Atom, IAtom
 
     public static User Get(string userName, Session? session = null)
     {
-        // Only admin or the user themselves may load this user object.
         if (session is null || !session.Valid)
             throw new UnauthorizedAccessException("Invalid session.");
 
@@ -66,8 +65,6 @@ public sealed class User : Atom, IAtom
     public string FullName { get; set; } = string.Empty;
 
     public string EMail { get; set; } = string.Empty;
-
-    // ✅ SPEC FIELD
     public string FavoriteGenre { get; set; } = string.Empty;
 
     public void SetPassword(string password)
@@ -108,7 +105,6 @@ public sealed class User : Atom, IAtom
             passwordHashToStore = _PasswordHash!;
         }
 
-        // ✅ MUST MATCH NEW UserRecord CONSTRUCTOR (FavoriteGenre added)
         var record = new UserStore.UserRecord(
             UserName: UserName,
             FullName: FullName ?? string.Empty,

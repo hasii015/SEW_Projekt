@@ -156,7 +156,6 @@ public sealed class MediaHandler : Handler, IHandler
         });
     }
 
-    // helper: avg stars (confirmed ratings only)
     private static double GetAvgStars(int mediaId)
     {
         var ratings = RatingStore.GetForMedia(mediaId, onlyConfirmed: true);

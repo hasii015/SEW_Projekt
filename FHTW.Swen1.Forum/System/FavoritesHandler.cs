@@ -67,7 +67,6 @@ public sealed class FavoritesHandler : Handler, IHandler
         // GET /api/users/{id}/favorites
         if (s.Length == 4 && s[0] == "api" && s[1] == "users" && int.TryParse(s[2], out _) && s[3] == "favorites")
         {
-            // spec uses user id, but we only have session user -> return session favorites
             var favIds = FavoriteStore.Get(session.UserName);
 
             var arr = new JsonArray();

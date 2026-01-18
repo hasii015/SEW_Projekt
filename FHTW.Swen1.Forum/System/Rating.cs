@@ -9,9 +9,9 @@ public sealed class Rating
     public int MediaId { get; set; }
     public string CreatedBy { get; set; } = "";
 
-    public int Stars { get; set; }              // 1–5 (Postman calls it "stars")
-    public string Comment { get; set; } = "";   // optional
-    public DateTime Timestamp { get; set; }     // required by spec
+    public int Stars { get; set; }            
+    public string Comment { get; set; } = "";  
+    public DateTime Timestamp { get; set; }     
 
     public bool IsConfirmed { get; set; } = false;
 

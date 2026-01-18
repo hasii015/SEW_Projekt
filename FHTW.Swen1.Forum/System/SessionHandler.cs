@@ -19,7 +19,6 @@ public sealed class SessionHandler: Handler, IHandler
     /// <param name="e">Event arguments.</param>
     public override void Handle(HttpRestEventArgs e)
     {
-        // SPEC: POST /api/users/login
         if (e.Path == "/api/users/login")
         {
             if (e.Method == HttpMethod.Post)
