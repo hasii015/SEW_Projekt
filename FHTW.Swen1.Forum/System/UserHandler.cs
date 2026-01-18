@@ -19,7 +19,6 @@ public sealed class UserHandler: Handler, IHandler
     /// <param name="e">Event arguments.</param>
     public override void Handle(HttpRestEventArgs e)
     {
-        // SPEC: POST /api/users/register
         if (e.Path == "/api/users/register")
         {
             if (e.Method == HttpMethod.Post)
@@ -46,7 +45,6 @@ public sealed class UserHandler: Handler, IHandler
                         user.SetPassword(password);
                         user.Save();
 
-                        // SPEC doesn't require a message, only success
                         e.Respond(HttpStatusCode.OK, new JsonObject() { ["success"] = true });
                     }
 

@@ -8,7 +8,6 @@ public static class UserStore
     private static readonly ConcurrentDictionary<string, UserRecord> _users =
         new(StringComparer.OrdinalIgnoreCase);
 
-    // Seed an admin account so you can always login as admin/admin while testing
     static UserStore()
     {
         if (!_users.ContainsKey("admin"))

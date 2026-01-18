@@ -4,7 +4,6 @@ namespace FHTW.Swen1.Forum.System;
 
 public static class FavoriteStore
 {
-    // username -> set of mediaIds
     private static readonly ConcurrentDictionary<string, HashSet<int>> _favorites = new();
 
     public static bool Add(string userName, int mediaId)

@@ -10,14 +10,12 @@ public sealed class UserProfileHandler : Handler, IHandler
 {
     public override void Handle(HttpRestEventArgs e)
     {
-        // IMPORTANT: do not block login/register
         if (e.Path == "/api/users/login" || e.Path == "/api/users/register")
             return;
 
         if (!e.Path.StartsWith("/api/users"))
             return;
 
-        // must be logged in
         var session = e.Session;
         if (session is null)
         {
@@ -29,14 +27,9 @@ public sealed class UserProfileHandler : Handler, IHandler
 
         var s = e.Path.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries);
 
-        // SPEC:
-        // GET /api/users/{id}/profile
-        // PUT /api/users/{id}/profile
-        // GET /api/users/{id}/ratings
         if (s.Length != 4 || s[0] != "api" || s[1] != "users")
             return;
 
-        // we accept any numeric id in the URL, but we always return the logged-in user's data
         if (!int.TryParse(s[2], out _))
             return;
 
