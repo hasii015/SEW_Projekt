@@ -5,7 +5,7 @@ using FHTW.Swen1.Forum.Server;
 
 namespace FHTW.Swen1.Forum.System;
 
-/// <summary>Handler for rating endpoints (SPEC).</summary>
+/// <summary>Handler for rating endpoints.</summary>
 public sealed class RatingHandler : Handler, IHandler
 {
     public override void Handle(HttpRestEventArgs e)
