@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FHTW.Swen1.Forum", "FHTW.Swen1.Forum\FHTW.Swen1.Forum.csproj", "{BFDC080C-4378-4507-A301-1F28BE96E5B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FHTW.Swen1.Forum.Tests", "FHTW.Swen1.Forum.Tests\FHTW.Swen1.Forum.Tests.csproj", "{6746F7CA-1715-1D31-95E0-775B57CB2A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BFDC080C-4378-4507-A301-1F28BE96E5B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFDC080C-4378-4507-A301-1F28BE96E5B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFDC080C-4378-4507-A301-1F28BE96E5B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6746F7CA-1715-1D31-95E0-775B57CB2A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6746F7CA-1715-1D31-95E0-775B57CB2A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6746F7CA-1715-1D31-95E0-775B57CB2A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6746F7CA-1715-1D31-95E0-775B57CB2A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

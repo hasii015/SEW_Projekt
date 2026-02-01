@@ -15,9 +15,9 @@ Invoke-RestMethod -Method POST -Uri "$base/api/users/register" -ContentType "app
 # -------------------------
 # 2) LOGIN + STORE TOKENS
 # -------------------------
-$token1=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user1";password="pass123"} | ConvertTo-Json)).token
-$token2=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user2";password="pass123"} | ConvertTo-Json)).token
-$token3=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user3";password="pass123"} | ConvertTo-Json)).token
+$token1=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user1";password="pass123"} | ConvertTo-Json)).token; $token1
+$token2=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user2";password="pass123"} | ConvertTo-Json)).token; $token2
+$token3=(Invoke-RestMethod -Method POST -Uri "$base/api/users/login" -ContentType "application/json" -Body (@{username="user3";password="pass123"} | ConvertTo-Json)).token; $token3
 
 $h1=@{Authorization="Bearer $token1"}
 $h2=@{Authorization="Bearer $token2"}
@@ -113,7 +113,7 @@ Invoke-RestMethod -Method GET -Uri "$base/api/users/1/recommendations?type=conte
 Invoke-RestMethod -Method GET -Uri "$base/api/leaderboard" -Headers $h1
 
 # -------------------------
-# 14) MEDIA UPDATE + DELETE PERMISSIONS CHECK (OPTIONAL)
+# 14) MEDIA UPDATE + DELETE PERMISSIONS CHECK 
 # -------------------------
 Invoke-RestMethod -Method PUT -Uri "$base/api/media/$m4" -Headers $h1 -ContentType "application/json" -Body (@{title="Spirited Away (Edited)"} | ConvertTo-Json)
 Invoke-RestMethod -Method DELETE -Uri "$base/api/media/$m5" -Headers $h1
